@@ -1,4 +1,4 @@
-<!-- Kopieren Sie den gesamten Code von hier an in Ihr Moodle-Textfeld -->
+<!-- Kopieren Sie den gesamten Code von hier an in Ihr Moodle-Textfeld (Situation 2 vorkonfiguriert) -->
 
 <!-- 1. HTML-Struktur: Container für den Inhalt und Lade-Hinweis -->
 <div id="content_container">
@@ -18,95 +18,46 @@
 <!-- 2. JavaScript-Logik zum Laden und Verarbeiten der Inhalte -->
 <script type="module">
     // ============== KONFIGURATION ==============
-    // Erkennt automatisch, ob lokal (über einen Server) oder online,
-    // und wählt den korrekten Basispfad.
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     const baseUrl = isLocal 
         ? 'github_content/' 
-        // Online über jsDelivr CDN (nicht Purge-Endpoint!)
         : 'https://cdn.jsdelivr.net/gh/andrkelb-school/SW_Situation_1_BauMax@latest/github_content/';
 
-    // URL-Parameter lesen
-    const urlParams = new URLSearchParams(window.location.search);
-    // Dynamisches Kapitel-Verzeichnis (harte Zuordnung vorhandener HTML-Dateien)
-    // Situation wählen (1|2). Standard: 1
-    const situation = (urlParams.get('situation') || '1').trim();
-    const chapters_s1 = [
-        { id: '1.0', title: 'Die BauMax-App', file: 'seite1.0_baumax_app.html' },
-        { id: '1.1', title: 'Fliesenrechner', file: 'seite1.1_fliesenrechner.html' },
-        { id: '1.2', title: 'Digitaler Helfer', file: 'seite1.2_digitaler_helfer.html' },
-        { id: '1.3', title: 'BauMax Premium', file: 'seite1.3_baumax_premium.html' },
-        { id: '1.4', title: 'Vollständiges Kundenprofil', file: 'seite1.4_vollstaendiges_kundenprofil.html' },
-        { id: '1.5', title: 'Checkliste Warenversand', file: 'seite1.5_checkliste_warenversand.html' },
-        { id: '1.6', title: 'Mehrwertsteuer', file: 'seite1.6_mehrwertsteuer.html' },
-        { id: '1.7', title: 'Speicheroptimierung', file: 'seite1.7_speicheroptimierung.html' },
-        { id: '1.8', title: 'Verpackungs-Rechner', file: 'seite1.8_verpackungs_rechner.html' },
-        { id: '1.9', title: 'Zugangs-Check', file: 'seite1.9_zugangs_check.html' }
-    ];
-    const chapters_s2 = [
+    // Immer Situation 2
+    const chapters = [
         { id: '2.0', title: 'SmartHome Systems', file: 'seite2.0_smarthome_systems.html' },
         { id: '2.1', title: 'Der Logik-Architekt', file: 'seite2.1_logik_architekt.html' }
     ];
-    const chapters = situation === '2' ? chapters_s2 : chapters_s1;
 
-    // Optional: Dateiname via URL-Parameter ?datei=seite1.6_mehrwertsteuer.html
+    // Optional: Dateiname via URL-Parameter ?datei=seite2.1_logik_architekt.html
+    const urlParams = new URLSearchParams(window.location.search);
     let currentFile = urlParams.get('datei') || chapters[0].file;
 
-    // Marker-Erkennung per Regex (kommentare mit optionalen Zeilenumbrüchen/Whitespace)
     const markerRegex = /<!--\s*HIER_STARTET_DER_INHALT\s*-->/g;
-    // ===========================================
-
-
-    // DOM-Element für den Container holen
     const contentContainer = document.getElementById('content_container');
 
-    /**
-     * Repariert relative Pfade in einem HTML-String.
-     * Sucht nach src="..." und href="..." und stellt die baseUrl voran,
-     * falls der Pfad nicht mit http beginnt.
-     * @param {string} htmlString - Der zu verarbeitende HTML-Code.
-     * @param {string} base - Die Basis-URL, die vorangestellt werden soll.
-     * @returns {string} Der HTML-Code mit korrigierten Pfaden.
-     */
     function fixRelativePaths(htmlString, base) {
-        // Wir erstellen ein temporäres, nicht sichtbares DOM-Element,
-        // um die HTML-Attribute sicher und einfach zu bearbeiten.
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = htmlString;
-
-        // Alle Elemente mit src- oder href-Attribut auswählen
         const elementsToFix = tempDiv.querySelectorAll('[src], [href]');
-
         elementsToFix.forEach(el => {
-            // Prüfen, ob das Element ein 'src'- oder 'href'-Attribut hat
-            const hasSrc = el.hasAttribute('src');
-            const hasHref = el.hasAttribute('href');
-
-            if (hasSrc) {
+            if (el.hasAttribute('src')) {
                 const path = el.getAttribute('src');
-                // Wenn der Pfad existiert und nicht mit http(s)://, # oder mailto: beginnt...
                 if (path && !path.startsWith('http') && !path.startsWith('#') && !path.startsWith('mailto:')) {
-                    // ... setze die baseUrl davor.
                     el.setAttribute('src', base + path);
                 }
             }
-
-            if (hasHref) {
+            if (el.hasAttribute('href')) {
                 const path = el.getAttribute('href');
                 if (path && !path.startsWith('http') && !path.startsWith('#') && !path.startsWith('mailto:')) {
                     el.setAttribute('href', base + path);
                 }
             }
         });
-
         return tempDiv.innerHTML;
     }
 
-    /**
-     * Hauptfunktion zum Laden und Anzeigen der Inhalte.
-     */
     function renderTOC(activeFile) {
-        // Falls schon vorhanden, nicht erneut bauen
         if (document.getElementById('moodle_toc')) return;
         const toc = document.createElement('nav');
         toc.id = 'moodle_toc';
@@ -124,7 +75,7 @@
         header.style.cursor = 'pointer';
         header.setAttribute('aria-expanded', 'true');
         const h = document.createElement('h4');
-        h.textContent = situation === '2' ? 'Kapitel – Situation 2' : 'Kapitel – Situation 1';
+        h.textContent = 'Kapitel – Situation 2';
         h.style.margin = '0';
         h.style.fontSize = '1rem';
         h.style.color = '#005691';
@@ -160,9 +111,7 @@
             a.addEventListener('mouseout', () => { if (ch.file !== activeFile) a.style.background = 'transparent'; });
             a.addEventListener('click', () => {
                 currentFile = ch.file;
-                // Entferne aktuellen Inhalt und lade neu
                 loadContent(ch.file);
-                // TOC neu hervorheben
                 document.getElementById('moodle_toc').remove();
                 renderTOC(ch.file);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -171,10 +120,7 @@
             ul.appendChild(li);
         });
         toc.appendChild(ul);
-        // Vor den Content Container einfügen
         contentContainer.parentNode.insertBefore(toc, contentContainer);
-
-        // Collapsing State
         let collapsed = JSON.parse(localStorage.getItem('moodle_toc_collapsed') || 'false');
         function applyCollapseState() {
             if (collapsed) {
@@ -197,20 +143,12 @@
 
     async function loadContent(fileToLoad = currentFile) {
         try {
-            // Cache-Busting + dynamischer Dateiname
             const fetchUrl = `${baseUrl}${fileToLoad}?t=${Date.now()}`;
-
-            // 1. Inhalte von der externen URL abrufen
             const response = await fetch(fetchUrl);
-
-            // Fehler, falls die Datei nicht gefunden wurde (z.B. 404)
             if (!response.ok) {
                 throw new Error(`Datei nicht gefunden oder Server-Fehler (Status: ${response.status})`);
             }
-
             const fullHtml = await response.text();
-
-            // 2. Inhalt zwischen den Markern per Regex extrahieren (mehrere Strategien)
             let matches = [...fullHtml.matchAll(markerRegex)];
             let extractedContent = '';
             if (matches.length >= 2) {
@@ -220,7 +158,6 @@
                 const endIndex = second.index;
                 extractedContent = fullHtml.slice(startIndex, endIndex);
             } else {
-                // Versuch 2: HTML-entity-kodierte Kommentare (&lt;!-- -->)
                 const encodedRegex = /&lt;!--\s*HIER_STARTET_DER_INHALT\s*--&gt;/g;
                 const encMatches = [...fullHtml.matchAll(encodedRegex)];
                 if (encMatches.length >= 2) {
@@ -229,9 +166,8 @@
                     const startIndex = first.index + first[0].length;
                     const endIndex = second.index;
                     extractedContent = fullHtml.slice(startIndex, endIndex);
-                    matches = encMatches; // fürs Logging
+                    matches = encMatches;
                 } else {
-                    // Versuch 3: Fallback -> Body-Inhalt extrahieren
                     const bodyMatch = /<body[^>]*>([\s\S]*?)<\/body>/i.exec(fullHtml);
                     if (bodyMatch) {
                         extractedContent = bodyMatch[1];
@@ -241,40 +177,23 @@
                     }
                 }
             }
-
-            // 3. Relative Pfade für Bilder und Links reparieren
             extractedContent = fixRelativePaths(extractedContent, baseUrl);
-
-            // 4. Den aufbereiteten Inhalt im Container anzeigen
             contentContainer.innerHTML = extractedContent;
-
-            // 5. Link-Handler anlegen: Verhindert, dass der Browser eine Seite
-            // im Raw-Format öffnet. Stattdessen holen wir die Zielseite per
-            // fetch und rendern den HTML-Inhalt im Container.
             function attachLinkHandlers() {
                 const anchors = contentContainer.querySelectorAll('a[href]');
                 anchors.forEach(a => {
-                    // Nur eigene relative/angepasste Links abfangen (auf baseUrl oder ohne http)
                     const href = a.getAttribute('href');
                     if (!href) return;
-
-                    // Wenn Link extern ist (http(s) und nicht unsere baseUrl), oder auf eine ID verweist, nicht abfangen
                     if (href.startsWith('#') || href.startsWith('mailto:') || (href.startsWith('http') && !href.startsWith(baseUrl))) {
                         return;
                     }
-
-                    // Abfangen
                     a.addEventListener('click', async (ev) => {
                         ev.preventDefault();
                         try {
-                            // a.href ist die 'magische' Eigenschaft, die die volle, aufgelöste URL liefert.
-                            // Das funktioniert sowohl lokal als auch online.
                             const fetchUrl = `${a.href}?t=${Date.now()}`;
                             const res = await fetch(fetchUrl);
                             if (!res.ok) throw new Error(`Fehler beim Laden (Status: ${res.status})`);
                             const html = await res.text();
-
-                            // Extraktion für Folgeseiten erneut per Regex; Fallback: gesamtes HTML
                             const subMatches = [...html.matchAll(markerRegex)];
                             let newContent;
                             if (subMatches.length >= 2) {
@@ -286,13 +205,8 @@
                             } else {
                                 newContent = html;
                             }
-                            
-                            // Pfade im neu geladenen Inhalt ebenfalls korrigieren
                             const fixed = fixRelativePaths(newContent, baseUrl);
                             contentContainer.innerHTML = fixed;
-                            console.log(`Marker auf Folgeseite gefunden: ${subMatches.length}`);
-
-                            // Re-attach handlers für die neu geladenen Links
                             attachLinkHandlers();
                         } catch (err) {
                             console.error('Fehler beim Laden verlinkter Seite:', err);
@@ -301,15 +215,9 @@
                     });
                 });
             }
-
-            // Handler initial anlegen
             attachLinkHandlers();
-            console.log(`Marker gefunden: ${matches.length} für ${fileToLoad}`);
-            // TOC beim ersten erfolgreichen Laden bauen
             renderTOC(fileToLoad);
-
         } catch (error) {
-            // 5. Fehlerbehandlung: Zeigt eine Fehlermeldung im Container an
             console.error('Fehler beim Laden des Inhalts:', error);
             contentContainer.innerHTML = `
                 <div style="border: 2px solid red; background-color: #ffebee; padding: 1rem; color: #c62828;">
@@ -321,9 +229,7 @@
         }
     }
 
-    // Die Ladefunktion aufrufen
     loadContent(currentFile);
-
 </script>
 
 <!-- Ende des kopierbaren Codes -->
