@@ -26,8 +26,23 @@
         // Online über jsDelivr CDN (nicht Purge-Endpoint!)
         : 'https://cdn.jsdelivr.net/gh/andrkelb-school/SW_Situation_1_BauMax@latest/github_content/';
 
-    // Der Dateiname, der geladen werden soll.
-    const filename = 'seite1.0_baumax_app.html';
+    // Dynamisches Kapitel-Verzeichnis (harte Zuordnung vorhandener HTML-Dateien)
+    const chapters = [
+        { id: '1.0', title: 'Die BauMax-App', file: 'seite1.0_baumax_app.html' },
+        { id: '1.1', title: 'Fliesenrechner', file: 'seite1.1_fliesenrechner.html' },
+        { id: '1.2', title: 'Digitaler Helfer', file: 'seite1.2_digitaler_helfer.html' },
+        { id: '1.3', title: 'BauMax Premium', file: 'seite1.3_baumax_premium.html' },
+        { id: '1.4', title: 'Vollständiges Kundenprofil', file: 'seite1.4_vollstaendiges_kundenprofil.html' },
+        { id: '1.5', title: 'Checkliste Warenversand', file: 'seite1.5_checkliste_warenversand.html' },
+        { id: '1.6', title: 'Mehrwertsteuer', file: 'seite1.6_mehrwertsteuer.html' },
+        { id: '1.7', title: 'Speicheroptimierung', file: 'seite1.7_speicheroptimierung.html' },
+        { id: '1.8', title: 'Verpackungs-Rechner', file: 'seite1.8_verpackungs_rechner.html' },
+        { id: '1.9', title: 'Zugangs-Check', file: 'seite1.9_zugangs_check.html' }
+    ];
+
+    // Optional: Dateiname via URL-Parameter ?datei=seite1.6_mehrwertsteuer.html
+    const urlParams = new URLSearchParams(window.location.search);
+    let currentFile = urlParams.get('datei') || chapters[0].file;
 
     // Marker-Erkennung per Regex (kommentare mit optionalen Zeilenumbrüchen/Whitespace)
     const markerRegex = /<!--\s*HIER_STARTET_DER_INHALT\s*-->/g;
@@ -82,10 +97,65 @@
     /**
      * Hauptfunktion zum Laden und Anzeigen der Inhalte.
      */
-    async function loadContent() {
+    function renderTOC(activeFile) {
+        // Falls schon vorhanden, nicht erneut bauen
+        if (document.getElementById('moodle_toc')) return;
+        const toc = document.createElement('nav');
+        toc.id = 'moodle_toc';
+        toc.style.maxWidth = '900px';
+        toc.style.margin = '0 auto 1rem auto';
+        toc.style.padding = '0.75rem 1rem';
+        toc.style.border = '1px solid #d6d6d6';
+        toc.style.borderRadius = '6px';
+        toc.style.background = '#ffffff';
+        toc.style.fontFamily = 'Arial, sans-serif';
+        const h = document.createElement('h4');
+        h.textContent = 'Kapitel';
+        h.style.margin = '0 0 0.5rem 0';
+        h.style.fontSize = '1rem';
+        h.style.color = '#005691';
+        toc.appendChild(h);
+        const ul = document.createElement('ul');
+        ul.style.listStyle = 'none';
+        ul.style.padding = '0';
+        ul.style.margin = '0';
+        chapters.forEach(ch => {
+            const li = document.createElement('li');
+            li.style.margin = '0';
+            const a = document.createElement('a');
+            a.textContent = ch.id + ' ' + ch.title;
+            a.href = 'javascript:void(0)';
+            a.style.display = 'block';
+            a.style.padding = '0.4rem 0.55rem';
+            a.style.fontSize = '0.85rem';
+            a.style.textDecoration = 'none';
+            a.style.color = ch.file === activeFile ? '#ffffff' : '#0d3a58';
+            a.style.background = ch.file === activeFile ? '#005691' : 'transparent';
+            a.style.borderRadius = '4px';
+            a.style.transition = 'background .15s ease, padding-left .15s ease';
+            a.addEventListener('mouseover', () => { if (ch.file !== activeFile) a.style.background = '#eef6fb'; });
+            a.addEventListener('mouseout', () => { if (ch.file !== activeFile) a.style.background = 'transparent'; });
+            a.addEventListener('click', () => {
+                currentFile = ch.file;
+                // Entferne aktuellen Inhalt und lade neu
+                loadContent(ch.file);
+                // TOC neu hervorheben
+                document.getElementById('moodle_toc').remove();
+                renderTOC(ch.file);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            li.appendChild(a);
+            ul.appendChild(li);
+        });
+        toc.appendChild(ul);
+        // Vor den Content Container einfügen
+        contentContainer.parentNode.insertBefore(toc, contentContainer);
+    }
+
+    async function loadContent(fileToLoad = currentFile) {
         try {
-            // Cache-Busting: Hängt einen Zeitstempel an, um Caching durch Moodle zu verhindern
-            const fetchUrl = `${baseUrl}${filename}?t=${Date.now()}`;
+            // Cache-Busting + dynamischer Dateiname
+            const fetchUrl = `${baseUrl}${fileToLoad}?t=${Date.now()}`;
 
             // 1. Inhalte von der externen URL abrufen
             const response = await fetch(fetchUrl);
@@ -191,7 +261,9 @@
 
             // Handler initial anlegen
             attachLinkHandlers();
-            console.log(`Marker gefunden: ${matches.length}`);
+            console.log(`Marker gefunden: ${matches.length} für ${fileToLoad}`);
+            // TOC beim ersten erfolgreichen Laden bauen
+            renderTOC(fileToLoad);
 
         } catch (error) {
             // 5. Fehlerbehandlung: Zeigt eine Fehlermeldung im Container an
@@ -207,7 +279,7 @@
     }
 
     // Die Ladefunktion aufrufen
-    loadContent();
+    loadContent(currentFile);
 
 </script>
 
