@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Aufgabe 5</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>body{font-family:Arial,Helvetica,sans-serif;background:#f9f9f9;padding:1rem}</style>
+</head>
+<body>
+
+<!-- HIER_STARTET_DER_INHALT -->
+
+<nav class="inhaltsverzeichnis">
+    <h4>Inhaltsverzeichnis</h4>
+    <ul>
+        <li><a href="seite1.0_baumax_app.html">1.0 Die BauMax-App</a></li>
+        <li><a href="seite1.1_smarthome.html">1.1 SmartHome Systems</a></li>
+        <li><a href="seite1.2_logik_architekt.html">1.2 Der Logik-Architekt</a></li>
+        <li><a href="seite1.3_aufgabe_1.html">1.3 Aufgabe 1</a></li>
+        <li><a href="seite1.4_aufgabe_2.html">1.4 Aufgabe 2</a></li>
+        <li><a href="seite1.5_aufgabe_3.html">1.5 Aufgabe 3</a></li>
+        <li><a href="seite1.6_aufgabe_4.html">1.6 Aufgabe 4</a></li>
+        <li><a href="seite1.7_aufgabe_5.html">1.7 Aufgabe 5</a></li>
+        <li><a href="seite1.8_aufgabe_6.html">1.8 Aufgabe 6</a></li>
+        <li><a href="seite1.9_aufgabe_7.html">1.9 Aufgabe 7</a></li>
+        <li><a href="seite1.10_zusammenfassung.html">1.10 Zusammenfassung</a></li>
+    </ul>
+</nav>
+<style>
+    .inhaltsverzeichnis {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: .25rem;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    .inhaltsverzeichnis h4 {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+    }
+    .inhaltsverzeichnis ul {
+        padding-left: 20px;
+        margin-bottom: 0;
+    }
+    .inhaltsverzeichnis li {
+        margin-bottom: 0.25rem;
+    }
+</style>
+
+<div
+  style="font-family: Arial, sans-serif; border: 1px solid #dddddd; border-radius: 8px; padding: 25px; background-color: #f9f9f9; max-width: 700px; margin: 20px auto;">
+  <h3
+    style="color: #005691; margin-top: 0; font-weight: bold; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px;">
+    Speicheroptimierung</h3>
+  <p style="font-size: 1em; line-height: 1.6;"><strong>E-Mail von Frau
+      Schmidt:</strong></p>
+  <div
+    style="background-color: #ffffff; border-left: 4px solid #0078d4; padding: 15px; font-style: italic;">
+    "Team, für die neue Lagerverwaltungs-Software von 'BauMax' müssen wir unsere
+    Datentypen optimieren. Wir wollen logische Fehler vermeiden und bei
+    millionen von Datensätzen auch den Speicherbedarf im Auge behalten. Bitte
+    plant die passenden Datentypen für die folgenden Informationen und setzt das
+    anschließend in einem Prototypen um."</div>
+  <h4
+    style="color: #34495e; margin-top: 30px; margin-bottom: 10px; border-top: 2px solid #eee; padding-top: 20px;">
+    Teil 1: Planung</h4>
+  <p style="margin: 0; line-height: 1.6;">Wähle für die folgenden Informationen
+    den jeweils am besten geeigneten, modifizierten Datentyp
+    (<code>short</code>, <code>unsigned int</code>, <code>long</code>) und
+    begründe deine Wahl in der Tabelle.</p>
+  <table
+    style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 1em;">
+    <thead>
+      <tr style="background-color: #f2f2f2;">
+        <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">
+          Information</th>
+        <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">
+          Gewählter Datentyp</th>
+        <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">
+          Kurze Begründung</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #ddd;">Die
+          <strong>Stückzahl</strong> eines Artikels auf Lager.</td>
+        <td style="padding: 12px; border: 1px solid #ddd;"> </td>
+        <td style="padding: 12px; border: 1px solid #ddd;"> </td>
+      </tr>
+      <tr style="background-color: #fafafa;">
+        <td style="padding: 12px; border: 1px solid #ddd;">Die eindeutige
+          <strong>Online-Bestellnummer</strong> (kann sehr groß werden).</td>
+        <td style="padding: 12px; border: 1px solid #ddd;"> </td>
+        <td style="padding: 12px; border: 1px solid #ddd;"> </td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #ddd;">Die <strong>Nummer
+            des Ganges</strong> im Baumarkt (Wertebereich 1-50).</td>
+        <td style="padding: 12px; border: 1px solid #ddd;"> </td>
+        <td style="padding: 12px; border: 1px solid #ddd;"> </td>
+      </tr>
+    </tbody>
+  </table>
+  <h4
+    style="color: #34495e; margin-top: 30px; margin-bottom: 10px; border-top: 2px solid #eee; padding-top: 20px;">
+    Teil 2: Implementierung</h4>
+  <p style="margin: 0; line-height: 1.6;">Setze deine Planung nun in einem
+    Prototypen um. Schreibe ein Programm, das die drei geplanten Werte
+    (Stückzahl, Bestellnummer, Gang) von einem Mitarbeiter einliest und zur
+    Kontrolle wieder ausgibt.</p>
+  <h5 style="color: #34495e; margin-top: 15px; margin-bottom: 10px;">🖥️
+    Erwartete Interaktion &amp; Ausgabe:</h5>
+  <pre
+    style="background-color: #2b2b2b; color: #f0f0f0; border: 1px solid #555; border-radius: 5px; padding: 15px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em;"><code style="font-family: 'Courier New', Courier, monospace;">--- Neue Lager-Erfassung ---
+Bitte geben Sie die Stueckzahl ein: 500
+Bitte geben Sie die Online-Bestellnummer ein: 3000000000
+Bitte geben Sie die Gangnummer ein: 12
+
+--- EINGABEN GESPEICHERT ---
+Stueckzahl: 500
+Bestellnummer: 3000000000
+Gangnummer: 12
+</code></pre>
+</div>
+<div
+  style="font-family: Arial, sans-serif; border: 1px solid #dddddd; border-radius: 8px; padding: 25px; background-color: #f9f9f9; max-width: 700px; margin: 20px auto; margin-top: -1px; border-top: 4px solid #FB8C00;">
+  <h4 style="color: #e65100; margin-top: 0; font-weight: bold;">Zusatzaufgaben
+    für Fortgeschrittene</h4>
+  <div
+    style="background-color: #fff3e0; padding: 15px; border: 1px solid #ffe0b2; border-radius: 5px; margin-top: 15px;">
+    <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 1.1em;">1.
+      Integer-Unterlauf demonstrieren</p>
+    <p style="margin: 0; line-height: 1.6;"><strong>Frau Schmidts
+        Anforderung:</strong> <em>"Zeigt mir in einem kleinen Testprogramm,
+        warum es gefährlich sein kann, von einer <code>unsigned
+          int</code>-Variable mit dem Wert 0 etwas zu subtrahieren. Beobachtet
+        und erklärt das Ergebnis in einem Code-Kommentar."</em></p>
+  </div>
+  <h5 style="color: #34495e; margin-top: 15px; margin-bottom: 10px;">🖥️
+    Erwartete Ausgabe:</h5>
+  <pre
+    style="background-color: #2b2b2b; color: #f0f0f0; border: 1px solid #555; border-radius: 5px; padding: 15px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em;"><code style="font-family: 'Courier New', Courier, monospace;">Der Wert der unsigned Variable ist: 0
+Nach der Subtraktion von 1 ist der Wert: 4294967295
+</code></pre>
+  <div
+    style="background-color: #fff3e0; padding: 15px; border: 1px solid #ffe0b2; border-radius: 5px; margin-top: 30px;">
+    <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 1.1em;">2.
+      Wertebereiche auslesen</p>
+    <p style="margin: 0; line-height: 1.6;"><strong>Frau Schmidts
+        Anforderung:</strong> <em>"Ich möchte die genauen Grenzen der Datentypen
+        auf unserem System sehen. Schreibt ein Programm, das den maximal
+        möglichen Wert für einen <code>short</code> und einen <code>int</code>
+        ausgibt."</em><br><strong>Tipp:</strong> Recherchiert die C++-Bibliothek
+      <strong><code>&lt;limits&gt;</code></strong> und wie man damit z.B. über
+      <code>std::numeric_limits&lt;int&gt;::max()</code> an die Werte kommt.</p>
+  </div>
+  <h5 style="color: #34495e; margin-top: 15px; margin-bottom: 10px;">🖥️
+    Erwartete Ausgabe:</h5>
+  <pre
+    style="background-color: #2b2b2b; color: #f0f0f0; border: 1px solid #555; border-radius: 5px; padding: 15px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em;"><code style="font-family: 'Courier New', Courier, monospace;">Maximaler Wert fuer short: 32767
+Maximaler Wert fuer int: 2147483647
+</code></pre>
+  </div>
+</div>
+
+<!-- HIER_STARTET_DER_INHALT -->
+
+</body>
+</html>

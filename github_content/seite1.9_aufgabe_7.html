@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Aufgabe 7</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>body{font-family:Arial,Helvetica,sans-serif;background:#f9f9f9;padding:1rem}</style>
+</head>
+<body>
+
+<!-- HIER_STARTET_DER_INHALT -->
+
+<nav class="inhaltsverzeichnis">
+    <h4>Inhaltsverzeichnis</h4>
+    <ul>
+        <li><a href="seite1.0_baumax_app.html">1.0 Die BauMax-App</a></li>
+        <li><a href="seite1.1_smarthome.html">1.1 SmartHome Systems</a></li>
+        <li><a href="seite1.2_logik_architekt.html">1.2 Der Logik-Architekt</a></li>
+        <li><a href="seite1.3_aufgabe_1.html">1.3 Aufgabe 1</a></li>
+        <li><a href="seite1.4_aufgabe_2.html">1.4 Aufgabe 2</a></li>
+        <li><a href="seite1.5_aufgabe_3.html">1.5 Aufgabe 3</a></li>
+        <li><a href="seite1.6_aufgabe_4.html">1.6 Aufgabe 4</a></li>
+        <li><a href="seite1.7_aufgabe_5.html">1.7 Aufgabe 5</a></li>
+        <li><a href="seite1.8_aufgabe_6.html">1.8 Aufgabe 6</a></li>
+        <li><a href="seite1.9_aufgabe_7.html">1.9 Aufgabe 7</a></li>
+        <li><a href="seite1.10_zusammenfassung.html">1.10 Zusammenfassung</a></li>
+    </ul>
+</nav>
+<style>
+    .inhaltsverzeichnis {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: .25rem;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    .inhaltsverzeichnis h4 {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+    }
+    .inhaltsverzeichnis ul {
+        padding-left: 20px;
+        margin-bottom: 0;
+    }
+    .inhaltsverzeichnis li {
+        margin-bottom: 0.25rem;
+    }
+</style>
+
+<div
+  style="font-family: Arial, sans-serif; border: 1px solid #dddddd; border-radius: 8px; padding: 25px; background-color: #f9f9f9; max-width: 700px; margin: 20px auto;">
+  <h3
+    style="color: #005691; margin-top: 0; font-weight: bold; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px;">
+    "BauMax" Zugangs-Check</h3>
+  <p style="font-size: 1em; line-height: 1.6;"><strong>E-Mail von Frau
+      Schmidt:</strong></p>
+  <div
+    style="background-color: #ffffff; border-left: 4px solid #0078d4; padding: 15px; font-style: italic;">
+    "Team, wir brauchen einen Prototypen für eine digitale Zugangs-Checkliste.
+    Das Programm soll noch keine Entscheidungen treffen, sondern nur den Status
+    von Kriterien als 'wahr' (1) oder 'falsch' (0) ausgeben. Wir müssen prüfen,
+    ob ein Mitarbeiter den Gabelstapler fahren darf oder für den Kassenbereich
+    zugelassen ist."</div>
+  <h4 style="color: #34495e; margin-top: 30px; margin-bottom: 10px;">Der Auftrag
+    (Hauptaufgabe)</h4>
+  <p style="font-size: 1em; line-height: 1.6;">Schreibe ein Programm, das die
+    folgenden Variablen am Anfang festlegt (initialisiert):</p>
+  <ul
+    style="font-size: 1em; line-height: 1.6; background-color: #fff; padding: 15px 15px 15px 35px; border-radius: 5px; border: 1px solid #eee;">
+    <li><code>int alter = 25;</code></li>
+    <li><code>bool hatFuehrerschein = true;</code></li>
+    <li><code>bool istImLagerTaetig = false;</code></li>
+  </ul>
+  <p style="font-size: 1em; line-height: 1.6; margin-top: 15px;">Das Programm
+    soll nun drei logische Prüfungen durchführen und die Ergebnisse in
+    <strong>neuen <code>bool</code>-Variablen</strong> speichern:</p>
+  <ol style="font-size: 1em; line-height: 1.7; padding-left: 30px;">
+    <li style="margin-bottom: 10px;"><strong>Prüfung 1:</strong> Erstelle die
+      Variable <code>darfGabelstaplerFahren</code>. Sie soll <code>true</code>
+      sein, wenn der Mitarbeiter älter als 18 <strong>UND</strong> einen
+      Führerschein hat.</li>
+    <li style="margin-bottom: 10px;"><strong>Prüfung 2:</strong> Erstelle die
+      Variable <code>darfAnKasseArbeiten</code>. Sie soll <code>true</code>
+      sein, wenn der Mitarbeiter <strong>NICHT</strong> im Lager tätig ist.</li>
+    <li style="margin-bottom: 10px;"><strong>Prüfung 3:</strong> Erstelle die
+      Variable <code>fuerInventurGeeignet</code>. Sie soll <code>true</code>
+      sein, wenn der Mitarbeiter im Lager tätig ist <strong>ODER</strong> älter
+      als 20 ist.</li>
+  </ol>
+  <p style="font-size: 1em; line-height: 1.6;">Gib alle drei
+    <code>bool</code>-Ergebnisse auf der Konsole aus.</p>
+  <p
+    style="font-size: 1.0em; background-color: #fce4e4; padding: 10px; border: 1px solid #f44336; border-radius: 5px; color: #c62828;">
+    <strong>Wichtiger Hinweis:</strong> Diese Aufgabe soll komplett <strong>ohne
+      <code>if</code>-Anweisungen</strong> gelöst werden! Speichere die
+    Ergebnisse der Vergleiche (z.B. <code>alter &gt; 18</code>) direkt in den
+    <code>bool</code>-Variablen.</p>
+  <p
+    style="font-size: 0.9em; background-color: #e3f2fd; padding: 10px; border: 1px solid #bbdefb; border-radius: 5px; margin-top: 15px;">
+    <strong>Tipp:</strong> Alle notwendigen Vergleichs- (<code>&gt;</code>) und
+    Logik-Operatoren (<code>&amp;&amp;</code>, <code>||</code>, <code>!</code>)
+    findest du im Skript, <strong>Kapitel 1.10</strong>.</p>
+  <h4 style="color: #34495e; margin-top: 30px; margin-bottom: 10px;">🖥️
+    Erwartete Ausgabe:</h4>
+  <pre
+    style="background-color: #2b2b2b; color: #f0f0f0; border: 1px solid #555; border-radius: 5px; padding: 15px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em;"><code style="font-family: 'Courier New', Courier, monospace;">--- BauMax Zugangs-Check ---
+Darf Gabelstapler fahren (1=Ja, 0=Nein): 1
+Darf an Kasse arbeiten (1=Ja, 0=Nein): 1
+Fuer Inventur geeignet (1=Ja, 0=Nein): 1
+</code></pre>
+</div>
+<div
+  style="font-family: Arial, sans-serif; border: 1px solid #dddddd; border-radius: 8px; padding: 25px; background-color: #f9f9f9; max-width: 700px; margin: 20px auto; margin-top: -1px; border-top: 4px solid #FB8C00;">
+  <h4 style="color: #e65100; margin-top: 0; font-weight: bold;">Zusatzaufgaben
+    für Fortgeschrittene</h4>
+  <div
+    style="background-color: #fff3e0; padding: 15px; border: 1px solid #ffe0b2; border-radius: 5px; margin-top: 15px;">
+    <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 1.1em;">1.
+      Kombinierte Logik (Teamleiter-Check)</p>
+    <p style="margin: 0; line-height: 1.6;"><strong>Frau Schmidts
+        Anforderung:</strong> <em>"Wir brauchen eine neue Prüfung:
+        <code>istTeamleiterAnwaerter</code>. Diese soll <code>true</code> sein,
+        wenn der Mitarbeiter <strong>mindestens 25</strong> Jahre alt ist
+        <strong>UND</strong> (entweder einen Führerschein hat
+        <strong>ODER</strong> im Lager tätig ist)."</em><br>Füge diese vierte
+      Prüfung hinzu und gib das Ergebnis ebenfalls aus.</p>
+  </div>
+  <div
+    style="background-color: #fff3e0; padding: 15px; border: 1px solid #ffe0b2; border-radius: 5px; margin-top: 30px;">
+    <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 1.1em;">2.
+      Komplexer Sicherheits-Check</p>
+    <p style="margin: 0; line-height: 1.6;"><strong>Frau Schmidts
+        Anforderung:</strong> <em>"Noch eine Prüfung:
+        <code>brauchtSonderschulung</code>. Diese soll <code>true</code> sein,
+        wenn der Mitarbeiter <strong>entweder</strong> (im Lager tätig ist
+        <strong>UND KEINEN</strong> Führerschein hat) <strong>ODER</strong>
+        (jünger als 20 ist)."</em><br>Füge diese fünfte Prüfung hinzu und nutze
+      Klammern <code>( )</code>, um die Logik korrekt zu gruppieren.</p>
+  </div>
+  <h5 style="color: #34495e; margin-top: 15px; margin-bottom: 10px;">🖥️
+    Erwartete Ausgabe (mit beiden Zusatzaufgaben):</h5>
+  <pre
+    style="background-color: #2b2b2b; color: #f0f0f0; border: 1px solid #555; border-radius: 5px; padding: 15px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em;"><code style="font-family: 'Courier New', Courier, monospace;">--- BauMax Zugangs-Check ---
+Darf Gabelstapler fahren (1=Ja, 0=Nein): 1
+Darf an Kasse arbeiten (1=Ja, 0=Nein): 1
+Fuer Inventur geeignet (1=Ja, 0=Nein): 1
+Ist Teamleiter-Anwaerter (1=Ja, 0=Nein): 1
+Braucht Sonderschulung (1=Ja, 0=Nein): 0
+</code></pre>
+  </div>
+</div>
+
+<!-- HIER_STARTET_DER_INHALT -->
+
+</body>
+</html>

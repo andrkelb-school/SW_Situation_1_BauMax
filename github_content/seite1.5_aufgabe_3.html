@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Aufgabe 3</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>body{font-family:Arial,Helvetica,sans-serif;background:#f9f9f9;padding:1rem}</style>
+</head>
+<body>
+
+<!-- HIER_STARTET_DER_INHALT -->
+
+<nav class="inhaltsverzeichnis">
+    <h4>Inhaltsverzeichnis</h4>
+    <ul>
+        <li><a href="seite1.0_baumax_app.html">1.0 Die BauMax-App</a></li>
+        <li><a href="seite1.1_smarthome.html">1.1 SmartHome Systems</a></li>
+        <li><a href="seite1.2_logik_architekt.html">1.2 Der Logik-Architekt</a></li>
+        <li><a href="seite1.3_aufgabe_1.html">1.3 Aufgabe 1</a></li>
+        <li><a href="seite1.4_aufgabe_2.html">1.4 Aufgabe 2</a></li>
+        <li><a href="seite1.5_aufgabe_3.html">1.5 Aufgabe 3</a></li>
+        <li><a href="seite1.6_aufgabe_4.html">1.6 Aufgabe 4</a></li>
+        <li><a href="seite1.7_aufgabe_5.html">1.7 Aufgabe 5</a></li>
+        <li><a href="seite1.8_aufgabe_6.html">1.8 Aufgabe 6</a></li>
+        <li><a href="seite1.9_aufgabe_7.html">1.9 Aufgabe 7</a></li>
+        <li><a href="seite1.10_zusammenfassung.html">1.10 Zusammenfassung</a></li>
+    </ul>
+</nav>
+<style>
+    .inhaltsverzeichnis {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: .25rem;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    .inhaltsverzeichnis h4 {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+    }
+    .inhaltsverzeichnis ul {
+        padding-left: 20px;
+        margin-bottom: 0;
+    }
+    .inhaltsverzeichnis li {
+        margin-bottom: 0.25rem;
+    }
+</style>
+
+<div
+  style="font-family: Arial, sans-serif; border: 1px solid #dddddd; border-radius: 8px; padding: 25px; background-color: #f9f9f9; max-width: 700px; margin: 20px auto;">
+  <h3
+    style="color: #005691; margin-top: 0; font-weight: bold; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px;">
+    Checkliste für Warenversand</h3>
+  <p style="font-size: 1.1em; line-height: 1.6;">Frau Schmidt aus dem
+    "BauMax"-Projekt bittet euch, eine digitale Checkliste für den Warenversand
+    zu programmieren. Mit dieser soll der Zustand eines Pakets vor dem Versand
+    geprüft werden.</p>
+  <div
+    style="background-color: #e3f2fd; padding: 15px; border: 1px solid #bbdefb; border-radius: 5px; margin: 20px 0;">
+    <p style="margin: 0; font-size: 1.1em;"><strong>Der Auftrag:</strong>
+      Schreibe ein Programm, das einem Lagermitarbeiter drei Ja/Nein-Fragen
+      stellt. Der Mitarbeiter soll jeweils <code>1</code> für 'Ja' oder
+      <code>0</code> für 'Nein' eingeben. Speichere die drei Antworten in
+      Variablen eines geeigneten Datentyps und gib am Ende den Status der
+      Checkliste aus.</p>
+  </div>
+  <h4 style="color: #34495e; margin-top: 30px; margin-bottom: 10px;">🖥️
+    Erwartete Interaktion &amp; Ausgabe:</h4>
+  <pre
+    style="background-color: #2b2b2b; color: #f0f0f0; border: 1px solid #555; border-radius: 5px; padding: 15px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em;"><code style="font-family: 'Courier New', Courier, monospace;">--- Versand-Checkliste ---
+Ist die Ware unbeschaedigt? (1=Ja, 0=Nein): 1
+Ist der Lieferschein beigelegt? (1=Ja, 0=Nein): 1
+Ist das Paket sicher verschlossen? (1=Ja, 0=Nein): 0
+
+--- CHECKLISTEN-STATUS ---
+Ware OK: 1
+Lieferschein OK: 1
+Paket OK: 0
+</code></pre>
+</div>
+<div
+  style="font-family: Arial, sans-serif; border: 1px solid #dddddd; border-radius: 8px; padding: 25px; background-color: #f9f9f9; max-width: 700px; margin: 20px auto; margin-top: -1px; border-top: 4px solid #FB8C00;">
+  <h4 style="color: #e65100; margin-top: 0; font-weight: bold;">Zusatzaufgaben
+    für Fortgeschrittene</h4>
+  <div
+    style="background-color: #fff3e0; padding: 15px; border: 1px solid #ffe0b2; border-radius: 5px; margin-top: 15px;">
+    <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 1.1em;">1.
+      Qualitäts-Score berechnen</p>
+    <p style="margin: 0; line-height: 1.6;">Erweitere das Programm, sodass es am
+      Ende einen <strong>"Qualitäts-Score"</strong> berechnet. Jede mit 'Ja'
+      (also <code>true</code>) beantwortete Frage zählt einen Punkt. Addiere die
+      Werte der drei <code>bool</code>-Variablen, um die Gesamtpunktzahl zu
+      ermitteln, und gib sie aus.</p>
+  </div>
+  <h5 style="color: #34495e; margin-top: 15px; margin-bottom: 10px;">🖥️
+    Erwartete Ausgabe (Beispiel):</h5>
+  <pre
+    style="background-color: #2b2b2b; color: #f0f0f0; border: 1px solid #555; border-radius: 5px; padding: 15px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em;"><code style="font-family: 'Courier New', Courier, monospace;">... (Checklisten-Status) ...
+-------------------------
+Qualitaets-Score: 2 von 3
+</code></pre>
+  <div
+    style="background-color: #fff3e0; padding: 15px; border: 1px solid #ffe0b2; border-radius: 5px; margin-top: 30px;">
+    <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 1.1em;">2.
+      Versandfreigabe prüfen</p>
+    <p style="margin: 0; line-height: 1.6;">Füge eine Gesamtprüfung für die
+      <strong>Versandfreigabe</strong> hinzu. Ein Paket darf nur versendet
+      werden, wenn <em>alle drei</em> Kriterien erfüllt sind. Nutze den
+      logischen UND-Operator (<code>&amp;&amp;</code>), um die drei
+      <code>bool</code>-Variablen zu verknüpfen. Speichere das Ergebnis in einer
+      vierten <code>bool</code>-Variable und gib diesen finalen Status aus.</p>
+  </div>
+  <h5 style="color: #34495e; margin-top: 15px; margin-bottom: 10px;">🖥️
+    Erwartete Ausgabe (Beispiel):</h5>
+  <pre
+    style="background-color: #2b2b2b; color: #f0f0f0; border: 1px solid #555; border-radius: 5px; padding: 15px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em;"><code style="font-family: 'Courier New', Courier, monospace;">... (Qualitaets-Score) ...
+Finale Versandfreigabe erteilt (1=Ja, 0=Nein): 0
+</code></pre>
+  </div>
+</div>
+
+<!-- HIER_STARTET_DER_INHALT -->
+
+</body>
+</html>
