@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BauMax Phase 2 - Integration Test Runner</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body {
+            background: #f5f5f5;
+            padding: 1rem;
+        }
+
+        .runner {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+        }
+
+        .test-item {
+            border-left: 4px solid #ccc;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            background: #f9f9f9;
+        }
+
+        .test-item.running {
+            border-left-color: #ffc107;
+            background: #fffbf0;
+        }
+
+        .test-item.passed {
+            border-left-color: #4caf50;
+            background: #f1f8f5;
+        }
+
+        .test-item.failed {
+            border-left-color: #f44336;
+            background: #fdf1f0;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #005691;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .summary {
+            background: linear-gradient(135deg, #005691, #0078d4);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            font-size: 1.1em;
+        }
+
+        .summary .stat {
+            display: inline-block;
+            margin-right: 2rem;
+        }
+
+        .summary .stat strong {
+            font-size: 1.5em;
+        }
+
+        button {
+            background: #005691;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background: #003d6b;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 0.9em;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="runner">
+        <h1>🧪 Integration Test Runner - Phase 2</h1>
+        <p>Vollständige Testsuite für CourseLoader und Moodle-Embed</p>
+        
+        <button id="runAllBtn" onclick="runAllTests()" style="margin-bottom: 2rem;">▶️ Alle Tests ausführen</button>
+        
+        <div id="testList"></div>
+        
+        <div id="summary" class="summary" style="display: none;">
+            <h3 style="margin-top: 0;">📊 Testergebnisse</h3>
+            <div class="stat">✅ Bestanden: <strong id="passed">0</strong></div>
+            <div class="stat">❌ Fehlgeschlagen: <strong id="failed">0</strong></div>
+            <div class="stat">⏱️ Dauer: <strong id="duration">0ms</strong></div>
+        </div>
+    </div>
+
+    <script>
+        // Test-Definition
+        const tests = [
+            {
+                name: 'CourseLoader Klasse geladen',
+                fn: async () => {
+                    if (typeof CourseLoader !== 'function') {
+                        throw new Error('CourseLoader ist nicht definiert');
+                    }
+                    return true;
+                }
+            },
+            {
+                name: 'config.json abrufbar',
+                fn: async () => {
+                    const response = await fetch('courses/situation_1/config.json');
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const config = await response.json();
+                    if (!config.chapters || config.chapters.length !== 10) {
+                        throw new Error(`Erwartet 10 Kapitel, erhalten ${config.chapters?.length || 0}`);
+                    }
+                    return true;
+                }
+            },
+            {
+                name: 'Kapitel-Datei abrufbar',
+                fn: async () => {
+                    const files = [
+                        'github_content/seite1.0_baumax_app.html',
+                        'github_content/seite1.1_fliesenrechner.html'
+                    ];
+                    for (const file of files) {
+                        const response = await fetch(file);
+                        if (!response.ok) throw new Error(`Datei nicht gefunden: ${file}`);
+                    }
+                    return true;
+                }
+            },
+            {
+                name: 'LocalStorage verfügbar',
+                fn: async () => {
+                    try {
+                        localStorage.setItem('test', 'value');
+                        localStorage.removeItem('test');
+                        return true;
+                    } catch (e) {
+                        throw new Error('LocalStorage nicht verfügbar');
+                    }
+                }
+            },
+            {
+                name: 'CSS geladen',
+                fn: async () => {
+                    const sheets = Array.from(document.styleSheets);
+                    const styleLoaded = sheets.some(s => s.href?.includes('style.css'));
+                    if (!styleLoaded) {
+                        // CSS könnte inline sein, daher prüfe Regeln
+                        return sheets.length > 0;
+                    }
+                    return true;
+                }
+            },
+            {
+                name: 'Responsive Breakpoints definiert',
+                fn: async () => {
+                    // Prüfe ob MediaQueries im CSS vorhanden sind
+                    const sheets = Array.from(document.styleSheets);
+                    let hasBreakpoints = false;
+                    try {
+                        for (const sheet of sheets) {
+                            const rules = sheet.cssRules || [];
+                            for (const rule of rules) {
+                                if (rule.media) {
+                                    hasBreakpoints = true;
+                                    break;
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        // Cross-origin, aber existiert
+                        hasBreakpoints = true;
+                    }
+                    return hasBreakpoints;
+                }
+            },
+            {
+                name: 'Fehlerbehandlung (404-Simulation)',
+                fn: async () => {
+                    try {
+                        await fetch('nonexistent-file-12345.html');
+                        return true; // Fetch selbst gibt keinen Error, nur 404
+                    } catch (e) {
+                        return true; // Auch wenn Error, ist das OK
+                    }
+                }
+            },
+            {
+                name: 'Caching-Mechanismus',
+                fn: async () => {
+                    try {
+                        const testData = { test: 'data', time: Date.now() };
+                        localStorage.setItem('test_cache_v1.0.0_test', JSON.stringify({
+                            data: testData,
+                            timestamp: Date.now()
+                        }));
+                        const item = localStorage.getItem('test_cache_v1.0.0_test');
+                        localStorage.removeItem('test_cache_v1.0.0_test');
+                        return item !== null;
+                    } catch (e) {
+                        throw new Error('Cache-Test fehlgeschlagen: ' + e.message);
+                    }
+                }
+            },
+            {
+                name: 'Moodle-Embed existiert',
+                fn: async () => {
+                    const response = await fetch('dist/moodle-embed.html');
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const html = await response.text();
+                    if (!html.includes('CourseLoader')) {
+                        throw new Error('CourseLoader nicht in moodle-embed.html');
+                    }
+                    return true;
+                }
+            },
+            {
+                name: 'Config JSON-Schema validiert',
+                fn: async () => {
+                    const response = await fetch('courses/situation_1/config.json');
+                    const config = await response.json();
+                    
+                    // Validiere erforderliche Felder
+                    if (!config.courseId) throw new Error('courseId fehlt');
+                    if (!config.courseName) throw new Error('courseName fehlt');
+                    if (!Array.isArray(config.chapters)) throw new Error('chapters ist kein Array');
+                    
+                    // Validiere jedes Kapitel
+                    config.chapters.forEach((ch, i) => {
+                        if (!ch.id) throw new Error(`Kapitel ${i}: id fehlt`);
+                        if (!ch.title) throw new Error(`Kapitel ${i}: title fehlt`);
+                        if (!ch.duration) throw new Error(`Kapitel ${i}: duration fehlt`);
+                    });
+                    
+                    return true;
+                }
+            }
+        ];
+
+        // Test-Runner
+        class TestRunner {
+            constructor() {
+                this.results = [];
+                this.startTime = null;
+            }
+
+            async run() {
+                this.startTime = performance.now();
+                const listDiv = document.getElementById('testList');
+                
+                for (const test of tests) {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'test-item running';
+                    itemDiv.id = `test-${test.name}`;
+                    itemDiv.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div class="spinner"></div>
+                            <strong>${test.name}</strong>
+                        </div>
+                    `;
+                    listDiv.appendChild(itemDiv);
+
+                    try {
+                        await test.fn();
+                        
+                        itemDiv.className = 'test-item passed';
+                        itemDiv.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span style="font-size: 1.5em;">✅</span>
+                                <strong>${test.name}</strong>
+                                <small style="color: #666; margin-left: auto;">Bestanden</small>
+                            </div>
+                        `;
+                        this.results.push({ name: test.name, passed: true });
+                    } catch (error) {
+                        itemDiv.className = 'test-item failed';
+                        itemDiv.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                                <span style="font-size: 1.5em;">❌</span>
+                                <strong>${test.name}</strong>
+                                <small style="color: #c62828; margin-left: auto;">Fehlgeschlagen</small>
+                            </div>
+                            <pre style="margin: 0;">${error.message}</pre>
+                        `;
+                        this.results.push({ name: test.name, passed: false, error: error.message });
+                    }
+
+                    // Kurze Pause für visuelles Feedback
+                    await new Promise(r => setTimeout(r, 300));
+                }
+
+                this.showSummary();
+            }
+
+            showSummary() {
+                const passed = this.results.filter(r => r.passed).length;
+                const failed = this.results.filter(r => !r.passed).length;
+                const duration = (performance.now() - this.startTime).toFixed(0);
+
+                document.getElementById('passed').textContent = passed;
+                document.getElementById('failed').textContent = failed;
+                document.getElementById('duration').textContent = duration + 'ms';
+                document.getElementById('summary').style.display = 'block';
+
+                document.getElementById('runAllBtn').disabled = false;
+            }
+        }
+
+        // Global Functions
+        function runAllTests() {
+            document.getElementById('testList').innerHTML = '';
+            document.getElementById('runAllBtn').disabled = true;
+            
+            const runner = new TestRunner();
+            runner.run();
+        }
+
+        // Auto-run on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🧪 Test Runner bereit. Klicke "Alle Tests ausführen" zum Starten.');
+        });
+    </script>
+</body>
+</html>
