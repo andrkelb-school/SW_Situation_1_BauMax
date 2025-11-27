@@ -109,16 +109,31 @@
         toc.style.borderRadius = '6px';
         toc.style.background = '#ffffff';
         toc.style.fontFamily = 'Arial, sans-serif';
+        const header = document.createElement('div');
+        header.style.display = 'flex';
+        header.style.alignItems = 'center';
+        header.style.justifyContent = 'space-between';
+        header.style.cursor = 'pointer';
+        header.setAttribute('aria-expanded', 'true');
         const h = document.createElement('h4');
         h.textContent = 'Kapitel';
-        h.style.margin = '0 0 0.5rem 0';
+        h.style.margin = '0';
         h.style.fontSize = '1rem';
         h.style.color = '#005691';
-        toc.appendChild(h);
+        const toggle = document.createElement('span');
+        toggle.id = 'moodle_toc_toggle';
+        toggle.textContent = '▼';
+        toggle.style.fontSize = '0.85rem';
+        toggle.style.color = '#005691';
+        toggle.style.userSelect = 'none';
+        header.appendChild(h);
+        header.appendChild(toggle);
+        toc.appendChild(header);
         const ul = document.createElement('ul');
         ul.style.listStyle = 'none';
         ul.style.padding = '0';
         ul.style.margin = '0';
+        ul.id = 'moodle_toc_list';
         chapters.forEach(ch => {
             const li = document.createElement('li');
             li.style.margin = '0';
@@ -150,6 +165,26 @@
         toc.appendChild(ul);
         // Vor den Content Container einfügen
         contentContainer.parentNode.insertBefore(toc, contentContainer);
+
+        // Collapsing State
+        let collapsed = JSON.parse(localStorage.getItem('moodle_toc_collapsed') || 'false');
+        function applyCollapseState() {
+            if (collapsed) {
+                ul.style.display = 'none';
+                toggle.textContent = '▲';
+                header.setAttribute('aria-expanded', 'false');
+            } else {
+                ul.style.display = 'block';
+                toggle.textContent = '▼';
+                header.setAttribute('aria-expanded', 'true');
+            }
+        }
+        header.addEventListener('click', () => {
+            collapsed = !collapsed;
+            localStorage.setItem('moodle_toc_collapsed', JSON.stringify(collapsed));
+            applyCollapseState();
+        });
+        applyCollapseState();
     }
 
     async function loadContent(fileToLoad = currentFile) {
