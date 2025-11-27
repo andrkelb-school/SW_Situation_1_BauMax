@@ -23,7 +23,8 @@
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     const baseUrl = isLocal 
         ? 'github_content/' 
-        : 'https://purge.jsdelivr.net/gh/andrkelb-school/SW_Situation_1_BauMax@latest/github_content/';
+        // Online über jsDelivr CDN (nicht Purge-Endpoint!)
+        : 'https://cdn.jsdelivr.net/gh/andrkelb-school/SW_Situation_1_BauMax@latest/github_content/';
 
     // Der Dateiname, der geladen werden soll.
     const filename = 'seite1.0_baumax_app.html';
@@ -96,16 +97,37 @@
 
             const fullHtml = await response.text();
 
-            // 2. Inhalt zwischen den Markern per Regex extrahieren
-            const matches = [...fullHtml.matchAll(markerRegex)];
-            if (matches.length < 2) {
-                throw new Error(`Der Marker <!-- HIER_STARTET_DER_INHALT --> wurde nicht zweimal in der Zieldatei gefunden. Gefunden: ${matches.length}`);
+            // 2. Inhalt zwischen den Markern per Regex extrahieren (mehrere Strategien)
+            let matches = [...fullHtml.matchAll(markerRegex)];
+            let extractedContent = '';
+            if (matches.length >= 2) {
+                const first = matches[0];
+                const second = matches[1];
+                const startIndex = first.index + first[0].length;
+                const endIndex = second.index;
+                extractedContent = fullHtml.slice(startIndex, endIndex);
+            } else {
+                // Versuch 2: HTML-entity-kodierte Kommentare (&lt;!-- -->)
+                const encodedRegex = /&lt;!--\s*HIER_STARTET_DER_INHALT\s*--&gt;/g;
+                const encMatches = [...fullHtml.matchAll(encodedRegex)];
+                if (encMatches.length >= 2) {
+                    const first = encMatches[0];
+                    const second = encMatches[1];
+                    const startIndex = first.index + first[0].length;
+                    const endIndex = second.index;
+                    extractedContent = fullHtml.slice(startIndex, endIndex);
+                    matches = encMatches; // fürs Logging
+                } else {
+                    // Versuch 3: Fallback -> Body-Inhalt extrahieren
+                    const bodyMatch = /<body[^>]*>([\s\S]*?)<\/body>/i.exec(fullHtml);
+                    if (bodyMatch) {
+                        extractedContent = bodyMatch[1];
+                        console.warn('Marker nicht gefunden – Fallback auf gesamten Body-Inhalt angewendet.');
+                    } else {
+                        throw new Error(`Der Marker wurde nicht gefunden und kein <body>-Block extrahierbar. (Matches: ${matches.length})`);
+                    }
+                }
             }
-            const first = matches[0];
-            const second = matches[1];
-            const startIndex = first.index + first[0].length;
-            const endIndex = second.index;
-            let extractedContent = fullHtml.slice(startIndex, endIndex);
 
             // 3. Relative Pfade für Bilder und Links reparieren
             extractedContent = fixRelativePaths(extractedContent, baseUrl);
