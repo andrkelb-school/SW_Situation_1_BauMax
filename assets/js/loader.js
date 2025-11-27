@@ -255,42 +255,43 @@ class CourseLoader {
     }
 
     try {
-      const url = `${this.baseUrl}/github_content/seite${chapter.id.replace('.', '_')}_*.html?t=${Date.now()}`;
-      
-      // Versuche alle Namensvarianten
-      const fileNames = [
-        `seite${chapter.id.replace('.', '_')}_baumax_app.html`,
-        `seite${chapter.id.replace('.', '_')}_fliesenrechner.html`,
-        `seite${chapter.id.replace('.', '_')}_digitaler_helfer.html`,
-        `seite${chapter.id.replace('.', '_')}_baumax_premium.html`,
-        `seite${chapter.id.replace('.', '_')}_vollstaendiges_kundenprofil.html`,
-        `seite${chapter.id.replace('.', '_')}_checkliste_warenversand.html`,
-        `seite${chapter.id.replace('.', '_')}_mehrwertsteuer.html`,
-        `seite${chapter.id.replace('.', '_')}_speicheroptimierung.html`,
-        `seite${chapter.id.replace('.', '_')}_verpackungs_rechner.html`,
-        `seite${chapter.id.replace('.', '_')}_zugangs_check.html`,
-      ];
+      // Mapping von Kapitel IDs zu echten Dateinamen
+      const fileMapping = {
+        '1.0': 'seite1.0_baumax_app.html',
+        '1.1': 'seite1.1_fliesenrechner.html',
+        '1.2': 'seite1.2_digitaler_helfer.html',
+        '1.3': 'seite1.3_baumax_premium.html',
+        '1.4': 'seite1.4_vollstaendiges_kundenprofil.html',
+        '1.5': 'seite1.5_checkliste_warenversand.html',
+        '1.6': 'seite1.6_mehrwertsteuer.html',
+        '1.7': 'seite1.7_speicheroptimierung.html',
+        '1.8': 'seite1.8_verpackungs_rechner.html',
+        '1.9': 'seite1.9_zugangs_check.html'
+      };
 
-      for (const fileName of fileNames) {
-        const fullUrl = `${this.baseUrl}/github_content/${fileName}`;
-        try {
-          const response = await fetch(fullUrl);
-          if (response.ok) {
-            let html = await response.text();
-            // Extrahiere Inhalt zwischen Markern
-            const content = this.extractContent(html);
-            this.saveToCache(cacheKey, content);
-            return content;
-          }
-        } catch (e) {
-          // Continue mit nächster Variante
-        }
+      const fileName = fileMapping[chapter.id];
+      if (!fileName) {
+        throw new Error(`Keine Datei für Kapitel ${chapter.id} definiert`);
       }
+
+      const fullUrl = `${this.baseUrl}/github_content/${fileName}?t=${Date.now()}`;
+      console.log(`📥 Lade: ${fullUrl}`);
       
-      throw new Error('Kapiteldatei nicht gefunden');
+      const response = await fetch(fullUrl);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      let html = await response.text();
+      // Extrahiere Inhalt zwischen Markern
+      const content = this.extractContent(html);
+      this.saveToCache(cacheKey, content);
+      console.log(`✓ Kapitel ${chapter.id} geladen`);
+      return content;
+      
     } catch (error) {
       console.error(`❌ Fehler beim Laden von Kapitel ${chapter.id}:`, error);
-      return `<div class="error"><strong>Fehler:</strong> Kapitel konnte nicht geladen werden.</div>`;
+      return `<div class="error"><strong>Fehler:</strong> Kapitel konnte nicht geladen werden (${error.message})</div>`;
     }
   }
 
