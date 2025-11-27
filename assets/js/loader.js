@@ -93,33 +93,21 @@ class CourseLoader {
     const header = document.createElement('div');
     header.className = 'course-header';
     header.innerHTML = `
-      <h2 style="color: #005691; margin: 0 0 0.5rem 0;">${this.config.courseName}</h2>
-      <p style="margin: 0; color: #666; font-size: 0.9em;">${this.config.description}</p>
-      <small style="color: #999;">v${this.config.version} • ${this.config.institution}</small>
+      <h2 style="color: white; margin: 0 0 0.5rem 0;">${this.config.courseName}</h2>
+      <p style="margin: 0; color: rgba(255, 255, 255, 0.9); font-size: 0.9em;">${this.config.description}</p>
+      <small style="color: rgba(255, 255, 255, 0.8);">v${this.config.version} • ${this.config.institution}</small>
     `;
     container.appendChild(header);
 
-    // Main Content Grid
-    const grid = document.createElement('div');
-    grid.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;';
-    
-    // Linke Spalte: TOC
-    const tocColumn = document.createElement('div');
-    tocColumn.innerHTML = this.renderTableOfContents();
-    
-    // Rechte Spalte: Content
+    // Content ohne rechte Seitenleiste (TOC oben)
+    const tocTop = document.createElement('div');
+    tocTop.innerHTML = this.renderTableOfContents();
+    container.appendChild(tocTop);
+
     const contentColumn = document.createElement('div');
     contentColumn.id = 'chapter_content';
-    contentColumn.innerHTML = '<div style="padding: 2rem; text-align: center; color: #999;">Wähle ein Kapitel aus</div>';
-    
-    grid.appendChild(tocColumn);
-    grid.appendChild(contentColumn);
-    container.appendChild(grid);
-
-    // Mobile: TOC unter Content
-    if (window.innerWidth < 768) {
-      grid.style.gridTemplateColumns = '1fr';
-    }
+    contentColumn.innerHTML = '<div style="padding: 2rem; text-align: center; color: #666;">Wähle ein Kapitel aus</div>';
+    container.appendChild(contentColumn);
 
     // Event Listener
     this.attachEventListeners();
@@ -130,29 +118,26 @@ class CourseLoader {
    */
   renderTableOfContents() {
     let html = `
-      <nav class="inhaltsverzeichnis" style="position: sticky; top: 0;">
-        <h4 style="margin: 0 0 1rem 0; color: #005691; border-bottom: 2px solid #005691; padding-bottom: 0.5rem;">
+      <nav class="inhaltsverzeichnis" style="position: relative; top: auto; margin-bottom: 1rem;">
+        <h4 style="margin: 0 0 0.5rem 0; color: #005691; border-bottom: 1px solid #005691; padding-bottom: 0.25rem; font-size: 1em;">
           📚 Inhaltsverzeichnis
         </h4>
         <ul style="list-style: none; padding: 0; margin: 0;">
     `;
 
     this.config.chapters.forEach(chapter => {
-      const icon = chapter.type === 'intro' ? '🎬' : '📖';
       html += `
-        <li style="margin-bottom: 0.5rem;">
+        <li style="margin-bottom: 0.15rem;">
           <a href="#" data-chapter-id="${chapter.id}" class="toc-link" style="
             display: block;
-            padding: 0.5rem;
-            border-radius: 4px;
-            transition: all 0.3s ease;
+            padding: 0.35rem 0.5rem;
+            border-radius: 3px;
+            transition: all 0.2s ease;
             cursor: pointer;
-          " onmouseover="this.style.backgroundColor='#e3f2fd'; this.style.paddingLeft='1rem';" 
-             onmouseout="this.style.backgroundColor='transparent'; this.style.paddingLeft='0.5rem';">
-            ${icon} ${chapter.id}: ${chapter.title}
-            <small style="display: block; color: #999; font-size: 0.8em; margin-top: 0.25rem;">
-              ⏱️ ${chapter.duration}
-            </small>
+            font-size: 0.9em;
+          " onmouseover="this.style.backgroundColor='#e3f2fd'; this.style.paddingLeft='0.75rem';" 
+             onmouseout="this.style.backgroundColor='transparent'; this.style.paddingLeft='0.35rem';">
+            ${chapter.id}: ${chapter.title}
           </a>
         </li>
       `;
@@ -160,20 +145,17 @@ class CourseLoader {
 
     html += `
         </ul>
-        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #ddd; font-size: 0.85em; color: #666;">
-          <p style="margin: 0;"><strong>Summe:</strong> ${this.getTotalDuration()}</p>
-          <p style="margin: 0.5rem 0 0 0;">
-            <button onclick="location.reload()" style="
-              background: #005691;
-              color: white;
-              border: none;
-              padding: 0.5rem 1rem;
-              border-radius: 4px;
-              cursor: pointer;
-              font-size: 0.9em;
-              width: 100%;
-            ">🔄 Cache löschen</button>
-          </p>
+        <div style="margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px solid #ddd;">
+          <button onclick="location.reload()" style="
+            background: #005691;
+            color: white;
+            border: none;
+            padding: 0.35rem 0.75rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.85em;
+            width: 100%;
+          ">🔄 Cache löschen</button>
         </div>
       </nav>
     `;
@@ -349,16 +331,13 @@ class CourseLoader {
         <div style="
           background: linear-gradient(135deg, #005691, #0078d4);
           color: white;
-          padding: 2rem;
+          padding: 1.5rem;
           border-radius: 8px;
-          margin-bottom: 2rem;
+          margin-bottom: 1.5rem;
         ">
-          <h2 style="margin: 0 0 0.5rem 0; font-size: 1.8em;">
+          <h2 style="margin: 0; font-size: 1.5em;">
             ${chapter.id}: ${chapter.title}
           </h2>
-          <p style="margin: 0; opacity: 0.9;">
-            ⏱️ ${chapter.duration} • 📝 ${chapter.type === 'intro' ? 'Einführung' : 'Lektion'}
-          </p>
         </div>
         <div class="chapter-content">
           ${content}

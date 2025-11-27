@@ -223,15 +223,10 @@ _captured_output
       const endTime = performance.now();
       const duration = (endTime - startTime).toFixed(2);
 
-      // Output anzeigen
-      const outputStr = String(result || '').trim();
-      if (outputStr) {
-        // Split output in einzelne Zeilen und zeige jede
-        outputStr.split('\n').forEach(line => {
-          if (line.trim()) {
-            this.log('output', line);
-          }
-        });
+      // Output anzeigen (als ein Block, ohne zusätzliche Leerzeilen)
+      const outputStr = String(result || '');
+      if (outputStr.trim()) {
+        this.log('output', outputStr);
       } else {
         this.log('info', '[keine Ausgabe]');
       }
@@ -402,22 +397,23 @@ except SyntaxError as e:
    * Schreibe Log
    */
   log(type, message) {
+    // Only show pure program output in UI; other types go to console
+    if (type !== 'output') {
+      const prefix = type.toUpperCase();
+      // Keep developer visibility via console
+      if (type === 'error') console.error(message);
+      else if (type === 'warning') console.warn(message);
+      else console.log(`${prefix}: ${message}`);
+      return;
+    }
+
     if (!this.output) return;
 
-    const logEntry = document.createElement('div');
-    logEntry.className = `log-entry log-${type}`;
-    
-    // Styling je nach Typ
-    const styles = {
-      info: 'color: #0066cc; font-style: italic;',
-      success: 'color: #00cc00; font-weight: bold;',
-      error: 'color: #ff0000; font-weight: bold;',
-      warning: 'color: #ff9900; font-weight: bold;',
-      output: 'color: #333; font-family: monospace; white-space: pre-wrap; word-break: break-all;'
-    };
-
-    logEntry.style.cssText = (styles[type] || '') + 'padding: 0.5rem 0; border-bottom: 1px solid #eee;';
-    logEntry.textContent = message;
+    const logEntry = document.createElement('pre');
+    logEntry.className = 'log-entry log-output';
+    // Force white text for readability as requested
+    logEntry.style.cssText = 'margin: 0; color: #ffffff; font-family: monospace; white-space: pre-wrap; word-break: break-word;';
+    logEntry.textContent = message.replace(/\r\n/g, '\n');
 
     this.output.appendChild(logEntry);
     this.output.scrollTop = this.output.scrollHeight;
