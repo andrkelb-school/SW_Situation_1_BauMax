@@ -187,24 +187,6 @@ http://localhost:8000/index.html
 
 ---
 
-## 🎓 Kapitel-Übersicht (Situation 1)
-
-| Kap. | Titel | Dauer | Typ |
-|------|-------|-------|-----|
-| 1.0 | Die BauMax-App | 10 min | Intro |
-| 1.1 | Fliesenrechner | 30 min | Lektion |
-| 1.2 | Digitaler Helfer | 30 min | Lektion |
-| 1.3 | BauMax Premium | 35 min | Lektion |
-| 1.4 | Vollständiges Kundenprofil | 40 min | Lektion |
-| 1.5 | Checkliste für Warenversand | 30 min | Lektion |
-| 1.6 | Mehrwertsteuer | 35 min | Lektion |
-| 1.7 | Speicheroptimierung | 40 min | Lektion |
-| 1.8 | Verpackungs-Rechner | 35 min | Lektion |
-| 1.9 | Zugangs-Check | 30 min | Lektion |
-| **Summe** | | **295 min** | |
-
----
-
 ## 🔐 Sicherheit & Best Practices
 
 - ✅ GitHub Pages mit HTTPS
@@ -274,6 +256,4 @@ Diese Materialien sind für Bildungszwecke gedacht.
 ### v0.9.0 (vorher)
 - Alte HTML-basierten Seiten
 
----
 
-**Stand:** 27. November 2025 | **Status:** Phase 1 ✅ | **Nächstes:** Phase 2 (Loader-System)
