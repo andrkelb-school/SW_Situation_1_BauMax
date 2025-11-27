@@ -28,9 +28,8 @@
     // Der Dateiname, der geladen werden soll.
     const filename = 'seite1.0_baumax_app.html';
 
-    // Der Marker, der den relevanten Inhaltsbereich eingrenzt.
-    // Der Inhalt ZWISCHEN zwei solchen Markern wird extrahiert.
-    const marker = '&lt;!-- HIER_STARTET_DER_INHALT --&gt;';
+    // Marker-Erkennung per Regex (kommentare mit optionalen Zeilenumbrüchen/Whitespace)
+    const markerRegex = /<!--\s*HIER_STARTET_DER_INHALT\s*-->/g;
     // ===========================================
 
 
@@ -97,14 +96,16 @@
 
             const fullHtml = await response.text();
 
-            // 2. Inhalt zwischen den Markern extrahieren
-            const parts = fullHtml.split(marker);
-
-            if (parts.length < 3) {
-                throw new Error(`Der Marker "${marker}" wurde nicht zweimal in der Zieldatei gefunden.`);
+            // 2. Inhalt zwischen den Markern per Regex extrahieren
+            const matches = [...fullHtml.matchAll(markerRegex)];
+            if (matches.length < 2) {
+                throw new Error(`Der Marker <!-- HIER_STARTET_DER_INHALT --> wurde nicht zweimal in der Zieldatei gefunden. Gefunden: ${matches.length}`);
             }
-
-            let extractedContent = parts[1]; // Wir nehmen den Teil zwischen den beiden Markern
+            const first = matches[0];
+            const second = matches[1];
+            const startIndex = first.index + first[0].length;
+            const endIndex = second.index;
+            let extractedContent = fullHtml.slice(startIndex, endIndex);
 
             // 3. Relative Pfade für Bilder und Links reparieren
             extractedContent = fixRelativePaths(extractedContent, baseUrl);
@@ -138,13 +139,23 @@
                             if (!res.ok) throw new Error(`Fehler beim Laden (Status: ${res.status})`);
                             const html = await res.text();
 
-                            // Falls die Zielseite ebenfalls Marker enthält, extrahiere wie vorher
-                            const parts = html.split(marker);
-                            let newContent = parts.length >= 3 ? parts[1] : html;
+                            // Extraktion für Folgeseiten erneut per Regex; Fallback: gesamtes HTML
+                            const subMatches = [...html.matchAll(markerRegex)];
+                            let newContent;
+                            if (subMatches.length >= 2) {
+                                const sFirst = subMatches[0];
+                                const sSecond = subMatches[1];
+                                const sStart = sFirst.index + sFirst[0].length;
+                                const sEnd = sSecond.index;
+                                newContent = html.slice(sStart, sEnd);
+                            } else {
+                                newContent = html;
+                            }
                             
                             // Pfade im neu geladenen Inhalt ebenfalls korrigieren
                             const fixed = fixRelativePaths(newContent, baseUrl);
                             contentContainer.innerHTML = fixed;
+                            console.log(`Marker auf Folgeseite gefunden: ${subMatches.length}`);
 
                             // Re-attach handlers für die neu geladenen Links
                             attachLinkHandlers();
@@ -158,6 +169,7 @@
 
             // Handler initial anlegen
             attachLinkHandlers();
+            console.log(`Marker gefunden: ${matches.length}`);
 
         } catch (error) {
             // 5. Fehlerbehandlung: Zeigt eine Fehlermeldung im Container an
